@@ -78,6 +78,5 @@ Ramez Alsaadi
 
 Cybersecurity Student | Application Security & Web Security
 
-GitHub:https://github.com/Ramez-Alsaadi
 
 GitHub: https://github.com/Ramez-Alsaadi
