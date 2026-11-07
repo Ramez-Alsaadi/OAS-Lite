@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Employees | OAS Lite</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 35px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        .header p {
+            margin: 0;
+            color: #64748b;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 18px;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .employee-count {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        thead {
+            background: #f8fafc;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        td {
+            padding: 17px 15px;
+            border-bottom: 1px solid #edf1f5;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .employee-name {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .department {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 6px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .footer {
+            margin-top: 25px;
+            color: #94a3b8;
+            font-size: 13px;
+        }
+
+        @media (max-width: 700px) {
+            .page {
+                padding: 20px;
+            }
+
+            .header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page">
+
+    <header class="header">
+
+        <div>
+            <h1>Employees</h1>
+            <p>Human Resources · Employee Management</p>
+        </div>
+
+        <a href="/employees/new" class="btn">
+            + Add Employee
+        </a>
+
+    </header>
+
+    <section class="card">
+
+        <div class="card-header">
+
+            <h2>Registered Employees</h2>
+
+            <span class="employee-count">
+                Total:
+                <strong th:text="${employees.size()}">0</strong>
+            </span>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Employee Name</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr th:each="employee : ${employees}">
+
+                        <td th:text="${employee.EmployeeCode}">
+                            OAS001
+                        </td>
+
+                        <td class="employee-name"
+                            th:text="${employee.fullName}">
+                            Ahmed Ali
+                        </td>
+
+                        <td>
+                            <span class="department"
+                                  th:text="${employee.department}">
+                                IT
+                            </span>
+                        </td>
+                        
+                        <td>
+                            <span th:if="${employee.active}"
+                                style="color:green; font-weight:bold;">
+                                      Active
+                            </span>
+                            
+                            <span th:unless="${employee.active}"
+                                  style="color:red; font-weight:bold;"> 
+                                Inactive
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button"
+                                    th:attr="data-id=${employee.id},data-active=${employee.active}"
+                                onclick="toggleEmployeeStatus(this)">
+                                <span th:if="${employee.active}"> 
+                                    Deactivate</span>
+                                <span th:unless="${employee.active}">
+                                    Activate</span>
+                            </button>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${employees.isEmpty()}">
+
+                        <td colspan="3" class="empty-state">
+                            No employees registered yet.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        OAS Lite · Attendance Management Prototype
+    </footer>
+
+</div>
+
+    
+    <script>
+async function toggleEmployeeStatus(button) {
+    const id = button.dataset.id;
+    const currentStatus = button.dataset.active === "true";
+    const newStatus = !currentStatus;
+
+    try {
+        const response = await fetch(`/api/employees/${id}/status`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                active: newStatus
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update employee status");
+        }
+
+        location.reload();
+
+    } catch (error) {
+        alert("Could not update employee status");
+        console.error(error);
+    }
+}
+</script>
+
+    
+    
+    
+</body>
+</html>
+

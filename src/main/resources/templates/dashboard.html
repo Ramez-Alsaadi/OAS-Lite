@@ -1,0 +1,1062 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OAS Lite | Attendance Dashboard</title>
+
+    <style>
+        :root {
+            --blue: #174A8B;
+            --blue-dark: #103765;
+            --blue-light: #EAF1FA;
+            --gold: #D6AD58;
+            --gold-light: #F8F0DE;
+            --white: #FFFFFF;
+            --background: #F5F7FB;
+            --text: #243247;
+            --muted: #7A8798;
+            --border: #E6EAF0;
+            --green: #21865A;
+            --green-light: #E7F5ED;
+            --red: #C94B4B;
+            --red-light: #FCEAEA;
+            --orange: #C58A27;
+            --orange-light: #FFF3DD;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            width: 250px;
+            background: var(--blue);
+            color: var(--white);
+            padding: 26px 18px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 10px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .brand-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 12px;
+            background: var(--gold);
+            color: var(--blue-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        .brand-name {
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: #D9E5F4;
+            margin-top: 3px;
+        }
+
+        .nav-title {
+            font-size: 10px;
+            color: #B9CDE5;
+            letter-spacing: 1.5px;
+            margin: 28px 12px 12px;
+            text-transform: uppercase;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 13px 14px;
+            margin: 3px 0;
+            border-radius: 9px;
+            color: #E5EDF7;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.10);
+        }
+
+        .nav-item.active {
+            background: var(--white);
+            color: var(--blue);
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 17px;
+        }
+
+        .sidebar-bottom {
+            margin-top: auto;
+            padding: 18px 10px 0;
+            border-top: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .demo-label {
+            display: inline-block;
+            background: rgba(214,173,88,0.18);
+            color: #F5D995;
+            border: 1px solid rgba(214,173,88,0.35);
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+        }
+
+        .sidebar-note {
+            color: #C7D7E9;
+            font-size: 11px;
+            line-height: 1.7;
+            margin-top: 12px;
+        }
+
+        /* Main */
+
+        .main {
+            flex: 1;
+            min-width: 0;
+            padding: 28px 32px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 27px;
+            font-weight: 800;
+            color: var(--blue-dark);
+        }
+
+        .page-subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .date-box {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 11px 15px;
+            color: var(--text);
+            font-size: 12px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 8px 12px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--blue-light);
+            color: var(--blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+        .profile-name {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .profile-role {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        /* Welcome */
+
+        .welcome {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px 27px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--gold);
+        }
+
+        .welcome h2 {
+            color: var(--blue-dark);
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .welcome p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .welcome-badge {
+            background: var(--gold-light);
+            color: #88651C;
+            border: 1px solid #EBD8A8;
+            border-radius: 10px;
+            padding: 11px 15px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* Statistics */
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin: 28px 0 16px;
+        }
+
+        .section-heading h2 {
+            color: var(--blue-dark);
+            font-size: 17px;
+        }
+
+        .section-heading span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 17px;
+        }
+
+        .stat-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            min-width: 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(23,74,139,0.06);
+        }
+
+        .stat-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .icon-blue {
+            color: var(--blue);
+            background: var(--blue-light);
+        }
+
+        .icon-gold {
+            color: #946E20;
+            background: var(--gold-light);
+        }
+
+        .icon-green {
+            color: var(--green);
+            background: var(--green-light);
+        }
+
+        .icon-orange {
+            color: var(--orange);
+            background: var(--orange-light);
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: 800;
+            color: var(--blue-dark);
+            margin-top: 15px;
+        }
+
+        .stat-description {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 7px;
+        }
+
+        /* Content grid */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(260px, 1fr);
+            gap: 20px;
+            margin-top: 24px;
+        }
+
+        .panel {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            min-width: 0;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 20px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-header h3 {
+            color: var(--blue-dark);
+            font-size: 15px;
+        }
+
+        .panel-header span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 520px;
+        }
+
+        th {
+            background: #F8FAFD;
+            color: var(--muted);
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 13px 20px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #F0F2F6;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .employee {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .employee-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 9px;
+            background: var(--blue-light);
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .employee-name {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .employee-id {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 4px;
+        }
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .status-present {
+            background: var(--green-light);
+            color: var(--green);
+        }
+
+        .status-late {
+            background: var(--orange-light);
+            color: var(--orange);
+        }
+
+        .status-offline {
+            background: var(--red-light);
+            color: var(--red);
+        }
+
+        /* Sites */
+
+        .sites-list {
+            padding: 5px 20px 15px;
+        }
+
+        .site-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 17px 0;
+            border-bottom: 1px solid #F0F2F6;
+        }
+
+        .site-item:last-child {
+            border-bottom: none;
+        }
+
+        .site-info {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
+
+        .site-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: var(--blue-light);
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+
+        .site-name {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .site-meta {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        .site-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+        }
+
+        .dot-red {
+            background: var(--red);
+        }
+
+        /* Footer */
+
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 25px;
+            padding: 18px 2px;
+            color: var(--muted);
+            font-size: 10px;
+        }
+
+        .footer strong {
+            color: var(--blue);
+        }
+
+        /* Responsive */
+
+        @media (max-width: 1150px) {
+            .sidebar {
+                width: 215px;
+            }
+
+            .main {
+                padding: 24px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .app {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                padding: 16px;
+            }
+
+            .brand {
+                padding-bottom: 15px;
+            }
+
+            .nav-title {
+                margin-top: 15px;
+            }
+
+            .nav-item {
+                display: inline-flex;
+                width: auto;
+                margin-right: 4px;
+                padding: 10px;
+            }
+
+            .sidebar-bottom {
+                display: none;
+            }
+
+            .main {
+                padding: 20px 14px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topbar-right {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .welcome {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 25px;
+            }
+
+            .stat-label {
+                font-size: 11px;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+        .status-late{
+            color: #d97706;
+            background-color: #fef3c7;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 6px;
+            
+        }
+        .status-ontime {
+            color: #15803d;
+            background-color: #dcfce7;
+            font-weight: 600;
+            padding:5px 10px;
+            border-radius:6px;
+        }
+        
+        
+        /* Status cell */
+.status-cell {
+    background: transparent !important;
+    padding: 12px 16px;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+/* Status badge */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 12px;
+    border-radius: 20px;
+
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+
+    white-space: nowrap;
+    width: fit-content;
+}
+
+/* On Time */
+.status-ontime {
+    background-color: #e8f5ee;
+    color: #198754;
+}
+
+/* Late */
+.status-late {
+    background-color: #fff4d6;
+    color: #a66a00;
+}
+
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">O</div>
+            <div>
+                <div class="brand-name">OAS Lite</div>
+                <div class="brand-subtitle">Attendance Management</div>
+            </div>
+        </div>
+
+        <div class="nav-title">MAIN MENU</div>
+
+        <a href="/" class="nav-item active">
+            <span class="nav-icon">▦</span>
+            Dashboard
+        </a>
+
+        <a href="#" class="nav-item">
+            <span class="nav-icon">♙</span>
+            Employees
+        </a>
+
+        <a href="#" class="nav-item">
+            <span class="nav-icon">◷</span>
+            Attendance
+        </a>
+
+        <a href="#" class="nav-item">
+            <span class="nav-icon">⌖</span>
+            Sites
+        </a>
+
+        <a href="#" class="nav-item">
+            <span class="nav-icon">⇄</span>
+            Sync Status
+        </a>
+
+        <div class="nav-title">SYSTEM</div>
+
+        <a href="#" class="nav-item">
+            <span class="nav-icon">⚙</span>
+            Settings
+        </a>
+
+        <div class="sidebar-bottom">
+            <span class="demo-label">DEMO VERSION</span>
+            <p class="sidebar-note">
+                OAS Lite<br>
+                Attendance monitoring prototype
+            </p>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- Header -->
+        <header class="topbar">
+
+            <div>
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">
+                    Attendance overview and workforce monitoring
+                </p>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="date-box">
+                    ◷ &nbsp; Attendance Schedule: 06:00 – 17:00
+                </div>
+
+                <div class="profile">
+                    <div class="avatar">AD</div>
+                    <div>
+                        <div class="profile-name">Administrator</div>
+                        <div class="profile-role">System Manager</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Welcome -->
+        <section class="welcome">
+
+            <div>
+                <h2>Welcome to OAS Lite</h2>
+                <p>
+                    Monitor employee attendance, review daily records,
+                    and track synchronization status across work sites.
+                </p>
+            </div>
+
+            <div class="welcome-badge">
+                DEMO DATA
+            </div>
+
+        </section>
+
+        <!-- Statistics -->
+        <div class="section-heading">
+            <h2>Attendance Overview</h2>
+            <span>Sample statistics for demonstration</span>
+        </div>
+
+        <section class="stats-grid">
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Total Employees</span>
+                    <div class="stat-icon icon-blue">♙</div>
+                </div>
+                <div class="stat-number" th:text="${totalEmployees}">128</div>
+                <div class="stat-description">Registered employees · Demo</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Present Today</span>
+                    <div class="stat-icon icon-green">✓</div>
+                </div>
+                <div class="stat-number">106</div>
+                <div class="stat-description">Sample attendance records</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Late Arrivals</span>
+                    <div class="stat-icon icon-gold">◷</div>
+                </div>
+                <div class="stat-number">12</div>
+                <div class="stat-description">After scheduled check-in</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-top">
+                    <span class="stat-label">Pending Sync</span>
+                    <div class="stat-icon icon-orange">⇄</div>
+                </div>
+                <div class="stat-number">8</div>
+                <div class="stat-description">Demo offline records</div>
+            </div>
+
+        </section>
+
+        <!-- Attendance and Sites -->
+        <section class="content-grid">
+
+            <!-- Recent Attendance -->
+            
+            
+            <div class="panel">
+                <div class="panel-header">
+                    <h3>Recent Attendance</h3>
+                    <span>Live attendance recoreds</span>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>DATE</td>
+                                <th>EMPLOYEE ID</th>
+                                <th>EMPLOYEE</th>
+                                <th>Department</th>
+                                <th>CHECK IN</th>
+                                <th>CHECK OUT</th>
+                                <th>Arrival Status</th>
+                                <th>Departure Status</th>
+                                <th>Overtime</th>
+
+                            </tr>
+                        </thead>   
+
+<tbody>
+
+    <tr th:each="attendance : ${attendanceRecords}">
+        
+        <!-- Attendance Date -->
+<td th:text="${attendance.attendanceDate != null
+    ? #temporals.format(attendance.attendanceDate, 'yyyy-MM-dd')
+    : '--'}">
+</td>
+
+        
+        
+        <!-- Employee ID -->
+        <td th:text="${attendance.employee.employeeCode}">
+            OAS001
+        </td>
+
+        <!-- Employee Name -->
+        <td>
+            <div class="employee">
+                <div class="employee-name"
+                     th:text="${attendance.employee.fullName}">
+                    Ahmed Ali
+                </div>
+            </div>
+        </td>
+
+        <!-- Department -->
+        <td th:text="${attendance.employee.department}">
+            IT
+        </td>
+
+        <!-- Check In -->
+        <td th:text="${attendance.checkIn != null
+            ? #temporals.format(attendance.checkIn, 'hh:mm a')
+            : '--'}">
+        </td>
+
+        <!-- Check Out -->
+        <td th:text="${attendance.checkOut != null
+            ? #temporals.format(attendance.checkOut, 'hh:mm a')
+            : '--'}">
+        </td>
+
+        <!-- Arrival Status -->
+        <td class='status-cell'>
+            <span class="status-badge"
+            th:text="${attendance.arrivalStatus}"
+            th:classappend="${attendance.arrivalStatus == 'Late' ? 'status-late' :'status-ontime'}">
+            </span>
+        </td>
+
+        <!-- Departure Status -->
+        <td th:text="${attendance.DepartureStatus}">
+        </td>
+
+        <!-- Overtime -->
+        <td th:text="${attendance.OvertimeMinutes + ' min'}">
+        </td>
+
+    </tr>
+
+</tbody>
+                        
+                    </table>
+
+                </div>
+
+            </div>
+
+            <!-- Sites -->
+            <div class="panel">
+
+                <div class="panel-header">
+                    <h3>Work Sites</h3>
+                    <span>Demo status</span>
+                </div>
+
+                <div class="sites-list">
+
+                    <div class="site-item">
+                        <div class="site-info">
+                            <div class="site-icon">⌖</div>
+                            <div>
+                                <div class="site-name">Main Site</div>
+                                <div class="site-meta">Site A · 42 employees</div>
+                            </div>
+                        </div>
+
+                        <div class="site-status" style="color: var(--green);">
+                            <span class="dot"></span>
+                            Online
+                        </div>
+                    </div>
+
+                    <div class="site-item">
+                        <div class="site-info">
+                            <div class="site-icon">⌖</div>
+                            <div>
+                                <div class="site-name">North Site</div>
+                                <div class="site-meta">Site B · 36 employees</div>
+                            </div>
+                        </div>
+
+                        <div class="site-status" style="color: var(--green);">
+                            <span class="dot"></span>
+                            Online
+                        </div>
+                    </div>
+
+                    <div class="site-item">
+                        <div class="site-info">
+                            <div class="site-icon">⌖</div>
+                            <div>
+                                <div class="site-name">South Site</div>
+                                <div class="site-meta">Site C · 50 employees</div>
+                            </div>
+                        </div>
+
+                        <div class="site-status" style="color: var(--red);">
+                            <span class="dot dot-red"></span>
+                            Offline
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span><strong>OAS Lite</strong> · Attendance Management Prototype</span>
+            <span>White · Blue · Gold</span>
+        </footer>
+
+    </main>
+
+</div>
+
+</body>
+</html>
+

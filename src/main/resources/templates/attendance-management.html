@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>إدارة الحضور | OAS Lite</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        .sidebar {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 230px;
+            height: 100vh;
+            background: #123b68;
+            color: white;
+            padding: 25px 18px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 35px;
+        }
+
+        .logo span {
+            color: #d9ad55;
+        }
+
+        .menu a {
+            display: block;
+            color: #dce7f5;
+            text-decoration: none;
+            padding: 14px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+        .menu a.active,
+        .menu a:hover {
+            background: #24578b;
+            color: white;
+        }
+
+        .main {
+            margin-right: 230px;
+            padding: 30px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h1 {
+            font-size: 27px;
+            color: #123b68;
+        }
+
+        .header p {
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+        }
+
+        .card h2 {
+            color: #123b68;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: white;
+            font-size: 15px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: none;
+            padding: 13px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .check-in {
+            background: #123b68;
+            color: white;
+        }
+
+        .check-out {
+            background: #d9ad55;
+            color: #172033;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .note {
+            background: #fff8e7;
+            border-right: 4px solid #d9ad55;
+            padding: 15px;
+            border-radius: 6px;
+            color: #72551d;
+            line-height: 1.8;
+        }
+
+        .status {
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        @media (max-width: 800px) {
+            .sidebar {
+                width: 190px;
+            }
+
+            .main {
+                margin-right: 190px;
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-right: 0;
+            }
+        }
+        
+        #languageButton{
+            background: #123b68;
+            color:white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight:bold;
+        }
+        #languageButton:hover{
+            background: #24578b;
+        }
+            
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo">OAS <span>Lite</span></div>
+
+        <nav class="menu">
+            <a href="/" data-ar="لوحة التحكم"  data-en="Dashboard">لوحة التحكم</a>
+            <a href="/attendance-management" class="active" data-ar="ادارة الحضور"  data-en="ِِAttendance Management">
+                إدارة الحضور
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main">
+
+        <header class="header">
+            <div>
+                <h1  data-er="إدارة الحضور" data-en="Attendance Management">إدارة الحضور</h1>
+                <p id="pageDescription" data-er="تسجيل حضور وانصراف الموظفين" data-en="Recording employee attendance and departure">تسجيل حضور وانصراف الموظفين</p>
+            </div>
+            <button type="button"
+                    id="languageButton"
+                    onclick="toggleLanguage()">English </button>
+        </header>
+
+        <section class="card">
+            <h2 data-ar="تسجيل حركة الموضف" data-en="Employee Attendance">تسجيل حركة الموظف</h2>
+
+            <div class="form-group">
+                <label for="employee" data-ar="اختر الموضف" data-en="Select Employee">اختر الموظف</label>
+
+                
+<div class="form-group">
+    <label for="employee" data-ar="اختر الموضف" data-en="Select Employee">اختر الموظف</label>
+
+    <select id="employee" name="employeeId" required>
+
+        <option value="" data-ar="اختر الموضف" data-en="Select Employee">اختر الموظف</option>
+
+        <option th:each="employee : ${employees}"
+                th:value="${employee.id}"
+                th:text="${employee.fullName}">
+        </option>
+
+    </select>
+</div>
+
+
+            </div>
+
+            <div class="buttons">
+                <button class="check-in" type="button" data-ar="تسجيل حضور" data-en="Check In">
+                    تسجيل الحضور
+                </button>
+
+                <button class="check-out" type="button" data-ar="تسجيل خروج" data-en="Check Out" >
+                    تسجيل الانصراف
+                </button>
+            </div>
+
+            <div id="status" class="status"></div>
+        </section>
+
+        <section class="card" data-ar="تعليمات النظام" data-en="System Instructions">تعليمات النظام
+            <h2>تعليمات النظام</h2>
+
+            <div class="note">
+                <p  data-ar="وقت الحضور الرسمي 06:00 صباحآ" data-en="Official Check-In Time: 06:00 AM">وقت الحضور الرسمي: 06:00 صباحًا</p>
+                <p data-ar="وقت الانصراف الرسمي 05:00 مساء" data-en="Official Check-Out Time: 05:00 PM>وقت الانصراف الرسمي: 05:00 مساء"ً</p>
+                <p data-ar="سيتم ربط هذه الصفحة بقاعدة بيانات الموظفين وواجهة تسجيل الحضور والانصراف في الخطوة التالية"
+                   data-en="This page will be connected to the employee database and attendance API in the next step.">
+                    سيتم ربط هذه الصفحة بقاعدة بيانات الموظفين
+                    وواجهة تسجيل الحضور والانصراف في الخطوة التالية.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    
+  
+<script>
+    let currentLanguage = "ar";
+
+    function toggleLanguage() {
+
+        currentLanguage =
+            currentLanguage === "ar" ? "en" : "ar";
+
+        document.documentElement.lang = currentLanguage;
+
+        document.documentElement.dir =
+            currentLanguage === "ar" ? "rtl" : "ltr";
+
+        document.querySelectorAll("[data-ar][data-en]")
+            .forEach(function(element) {
+
+                element.textContent =
+                    element.getAttribute(
+                        "data-" + currentLanguage
+                    );
+
+            });
+
+        document.getElementById("languageButton")
+            .textContent =
+                currentLanguage === "ar"
+                    ? "English"
+                    : "العربية";
+    }
+</script>
+
+
+
+
+<script>
+    // ==============================
+    // OAS Lite - Attendance Actions
+    // ==============================
+
+    const employeeSelect = document.getElementById("employee");
+
+    const checkInButton = document.querySelector(".check-in");
+
+    const checkOutButton = document.querySelector(".check-out");
+
+
+    // تسجيل الحضور
+    checkInButton.addEventListener("click", async function () {
+
+        const employeeId = employeeSelect.value;
+
+        if (!employeeId) {
+            alert("يرجى اختيار الموظف أولاً");
+            return;
+        }
+
+        checkInButton.disabled = true;
+
+        try {
+
+            const response = await fetch(
+                `/api/attendance/check-in/${employeeId}`,
+                {
+                    method: "POST"
+                }
+            );
+
+            if (!response.ok) {
+
+                if (response.status === 409) {
+                    alert("الموظف مسجل حضوره بالفعل اليوم");
+                } else {
+                    alert("فشل تسجيل الحضور");
+                }
+
+                return;
+            }
+
+            alert("تم تسجيل الحضور بنجاح");
+
+            location.reload();
+
+        } catch (error) {
+
+            console.error("Check-in error:", error);
+
+            alert("تعذر الاتصال بالخادم");
+
+        } finally {
+
+            checkInButton.disabled = false;
+
+        }
+
+    });
+
+
+    // تسجيل الانصراف
+    checkOutButton.addEventListener("click", async function () {
+
+        const employeeId = employeeSelect.value;
+
+        if (!employeeId) {
+            alert("يرجى اختيار الموظف أولاً");
+            return;
+        }
+
+        checkOutButton.disabled = true;
+
+        try {
+
+            // جلب سجلات الحضور
+            const response = await fetch("/api/attendance");
+
+            if (!response.ok) {
+                alert("تعذر جلب سجلات الحضور");
+                return;
+            }
+
+            const attendanceRecords = await response.json();
+
+            // البحث عن سجل الموظف الذي لم يسجل انصرافه
+            const attendance = attendanceRecords.find(record => {
+
+                const recordEmployeeId = record.employee?.id;
+
+                const checkoutTime = record.checkOut ?? record.checkout;
+
+                return String(recordEmployeeId) === String(employeeId)
+                    && !checkoutTime;
+
+            });
+
+            if (!attendance) {
+
+                alert("لا يوجد سجل حضور مفتوح لهذا الموظف");
+
+                return;
+
+            }
+
+            // تسجيل الانصراف
+            const checkoutResponse = await fetch(
+                `/api/attendance/check-out/${attendance.id}`,
+                {
+                    method: "POST"
+                }
+            );
+
+            if (!checkoutResponse.ok) {
+
+                alert("فشل تسجيل الانصراف");
+
+                return;
+
+            }
+
+            alert("تم تسجيل الانصراف بنجاح");
+
+            location.reload();
+
+        } catch (error) {
+
+            console.error("Check-out error:", error);
+
+            alert("تعذر الاتصال بالخادم");
+
+        } finally {
+
+            checkOutButton.disabled = false;
+
+        }
+
+    });
+
+</script>
+
+
+
+
+
+    
+    <script>
+async function testOASOffline() {
+
+    try {
+
+        const operation = await saveOfflineAttendance(
+            1,
+            "CHECK_IN"
+        );
+
+        console.log("Saved:", operation);
+
+        const pending = await getPendingAttendance();
+
+        console.log("Pending Operations:", pending);
+
+        console.log(
+            "Pending Count:",
+            await countPendingAttendance()
+        );
+
+    } catch (error) {
+
+        console.error("Offline Test Error:", error);
+
+    }
+}
+</script>
+
+<script src="/js/offline-attendance.js"> 
+    </script>
+
+</body>
+</html>
+
+

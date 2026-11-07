@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Employee | OAS Lite</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 45px auto;
+            padding: 20px;
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .header p {
+            color: #64748b;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        button, .cancel {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .cancel {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .message {
+            display: none;
+            margin-top: 18px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .success {
+            display: block;
+            background: #e8f5ee;
+            color: #198754;
+        }
+
+        .error {
+            display: block;
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 15px auto;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <header class="header">
+        <h1>Add New Employee</h1>
+        <p>Human Resources · Employee Registration</p>
+    </header>
+
+    <section class="card">
+
+        <form id="employeeForm">
+
+            <div class="form-group">
+                <label for="employeeCode">Employee ID</label>
+                <input
+                    type="text"
+                    id="employeeCode"
+                    placeholder="Example: OAS003"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Enter employee full name"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department</label>
+                <select id="department" required>
+                    <option value="">Select Department</option>
+                    <option value="IT">IT</option>
+                    <option value="HR">HR</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Operations">Operations</option>
+                </select>
+            </div>
+
+            <div class="actions">
+                <button type="submit" id="saveButton">
+                    Save Employee
+                </button>
+
+                <a href="/employees" class="cancel">
+                    Cancel
+                </a>
+            </div>
+
+            <div id="message" class="message"></div>
+
+        </form>
+
+    </section>
+
+</div>
+
+<script>
+    const form = document.getElementById("employeeForm");
+    const message = document.getElementById("message");
+    const saveButton = document.getElementById("saveButton");
+
+    form.addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        const employee = {
+            employeeCode: document.getElementById("employeeCode").value.trim(),
+            fullName: document.getElementById("fullName").value.trim(),
+            department: document.getElementById("department").value,
+            active: true
+        };
+
+        if (!employee.employeeCode || !employee.fullName || !employee.department) {
+            message.textContent = "Please complete all required fields.";
+            message.className = "message error";
+            return;
+        }
+
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+
+        try {
+            const response = await fetch("/api/employees", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(employee)
+            });
+
+            if (!response.ok) {
+                throw new Error("Server returned status " + response.status);
+            }
+
+            message.textContent = "Employee registered successfully.";
+            message.className = "message success";
+
+            setTimeout(function() {
+                window.location.href = "/employees";
+            }, 1000);
+
+        } catch (error) {
+
+            message.textContent = "Could not save employee. Please check the server.";
+            message.className = "message error";
+
+            saveButton.disabled = false;
+            saveButton.textContent = "Save Employee";
+        }
+
+    });
+</script>
+
+</body>
+</html>
+
