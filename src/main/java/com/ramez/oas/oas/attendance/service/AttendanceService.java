@@ -60,37 +60,30 @@ public class AttendanceService {
 
     // تسجيل الانصراف
     public Attendance checkout(Attendance attendance) {
-
         if (attendance.getCheckOut() != null) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Attendance already checked out."
             );
         }
-
         if (attendance.getCheckIn() == null) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Employee must check in before checking out"
             );
         }
-
         if (attendance.getCheckOut() != null) {
             throw new ResponseStatusException(
                     HttpStatus.CONFLICT,
                     "Employee already checked out"
             );
         }
-
-        
 LocalDateTime checkoutTime = LocalDateTime.now();
 
 attendance.setCheckOut(checkoutTime);
-
 LocalDateTime officialEnd = checkoutTime
         .toLocalDate()
         .atTime(17, 0);
-
 if (checkoutTime.isBefore(officialEnd)) {
 
     attendance.setDepartureStatus("Early Departure");
@@ -98,9 +91,7 @@ if (checkoutTime.isBefore(officialEnd)) {
     attendance.setOvertimeMinutes(0);
 
 } else {
-
     attendance.setDepartureStatus("Completed");
-
     int overtime = (int) java.time.Duration.between(
             officialEnd,
             checkoutTime

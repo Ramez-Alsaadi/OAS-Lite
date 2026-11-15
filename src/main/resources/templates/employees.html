@@ -10,6 +10,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="_csrf"
+          th:content="${_csrf.token}">
+    <meta name="_csrf_header"
+          th:content="${_csrf.headerName}">
 
     <title>Employees | OAS Lite</title>
 
@@ -277,12 +281,17 @@ async function toggleEmployeeStatus(button) {
     const id = button.dataset.id;
     const currentStatus = button.dataset.active === "true";
     const newStatus = !currentStatus;
+    
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
     try {
         const response = await fetch(`/api/employees/${id}/status`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                [csrfHeader]: csrfToken
             },
             body: JSON.stringify({
                 active: newStatus

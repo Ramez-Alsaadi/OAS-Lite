@@ -8,7 +8,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="_csrf"
+          th:content="${_csrf.token}">
+    <meta name="_csrf_header"
+          th:content="${_csrf.headerName}"> <!-- عملية الاصلاح لكود csrf -->
+    
     <title>إدارة الحضور | OAS Lite</title>
 
     <style>
@@ -329,6 +333,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
     const checkOutButton = document.querySelector(".check-out");
 
+    const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+    
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
 
     // تسجيل الحضور
     checkInButton.addEventListener("click", async function () {
@@ -347,7 +354,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
             const response = await fetch(
                 `/api/attendance/check-in/${employeeId}`,
                 {
-                    method: "POST"
+                    method: "POST",
+                    headers: {
+                        [csrfHeader]:csrfToken
+                    }
                 }
             );
 
@@ -427,9 +437,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this temp
 
             // تسجيل الانصراف
             const checkoutResponse = await fetch(
-                `/api/attendance/check-out/${attendance.id}`,
+                `/api/attendance/check-out/${employeeId}`,
                 {
-                    method: "POST"
+                    method: "POST",
+                    headers: {
+                        [csrfHeader]:csrfToken
+                    }
                 }
             );
 
