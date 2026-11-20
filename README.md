@@ -11,7 +11,7 @@ Following remediation, 6 security tests were performed, and all 6 passed (PASS),
 Assessment: Remediated and Re-tested
 Test Results: 6/6 PASS
 
-📄 "View Full Security Assessment Report" (docs/security/authentication-authorization-testing.md)
+📄 [View Full Security Assessment Report](docs/security/authentication-authorization-testing.md)
 
 
 Project Overview
