@@ -1,5 +1,19 @@
 OAS Lite – Offline Attendance Management System
 
+Security Assessment
+
+A security assessment was conducted on OAS Lite, focusing on Authentication and Authorization controls.
+
+The assessment identified access control weaknesses that were remediated by implementing Spring Security, including authentication enforcement and role-based access control (RBAC).
+
+Following remediation, 6 security tests were performed, and all 6 passed (PASS), verifying that access restrictions were enforced as expected.
+
+Assessment: Remediated and Re-tested
+Test Results: 6/6 PASS
+
+📄 "View Full Security Assessment Report" (docs/security/authentication-authorization-testing.md)
+
+
 Project Overview
 
 OAS Lite is a web-based attendance management system built with Java and Spring Boot.
